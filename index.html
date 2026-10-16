@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1d4ed8" />
+    <title>Ore di lavoro</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Registro personale</p>
+          <h1>Le mie ore</h1>
+          <p class="subtitle">Registra la giornata e tieni sotto controllo il tuo mese.</p>
+        </div>
+        <button class="month-picker" id="monthPicker" type="button" aria-label="Cambia mese">
+          <span id="monthLabel"></span><span aria-hidden="true">⌄</span>
+        </button>
+        <input id="monthInput" type="month" aria-label="Seleziona mese" />
+        <span class="sync-status" id="syncStatus">Salvataggio locale</span>
+      </header>
+
+      <section class="summary-grid" aria-label="Riepilogo del mese">
+        <article class="stat-card primary"><span>Ore lavorate</span><strong id="totalHours">0h 00m</strong><small id="workingDays">0 giornate registrate</small></article>
+        <article class="stat-card"><span>Ore straordinarie</span><strong id="overtimeHours">0h 00m</strong><small>oltre 8 ore al giorno</small></article>
+        <article class="stat-card"><span>Trasferte</span><strong id="travelDays">0</strong><small>giornate in trasferta</small></article>
+      </section>
+      <section class="auth-panel" id="authPanel">
+        <div><p class="eyebrow">Sincronizzazione</p><h2>Accedi per sincronizzare le ore</h2><p>I dati saranno disponibili in modo protetto su PC e cellulare.</p></div>
+        <form id="authForm" class="auth-form"><input id="email" type="email" placeholder="La tua email" required /><input id="password" type="password" minlength="6" placeholder="Password (minimo 6 caratteri)" required /><button class="button" type="submit">Accedi</button><button class="button ghost" id="signUpButton" type="button">Crea account</button></form>
+      </section>
+
+      <section class="content-grid">
+        <section class="panel entry-panel">
+          <div class="panel-title"><div><p class="eyebrow">Nuova registrazione</p><h2 id="formTitle">Aggiungi una giornata</h2></div></div>
+          <form id="timeForm">
+            <input type="hidden" id="entryId" />
+            <div class="form-grid">
+              <label>Data<input id="date" type="date" required /></label>
+              <label>Commessa<input id="project" type="text" list="projectSuggestions" placeholder="es. Sito Alfa" autocomplete="off" required /><datalist id="projectSuggestions"></datalist></label>
+              <label class="full">Attività<input id="activity" type="text" placeholder="es. Installazione e collaudo" required /></label>
+              <label class="full">Note<textarea id="notes" rows="4" placeholder="Scrivi qui le varie cose svolte, una per riga..."></textarea></label>
+              <div class="time-row">
+                <label>Inizio<select id="start" required aria-label="Orario di inizio"></select></label>
+                <label>Fine<select id="end" required aria-label="Orario di fine"></select></label>
+                <label>Pausa pranzo<select id="break"><option value="0">Nessuna</option><option value="30">30 minuti</option><option value="60" selected>1 ora</option><option value="90">1 ora e 30 min</option><option value="120">2 ore</option></select></label>
+              </div>
+            </div>
+            <div class="form-footer">
+              <label class="toggle"><input id="travel" type="checkbox" /><span class="switch"></span><span>Trasferta</span></label>
+              <div class="form-actions"><button class="button ghost" id="cancelEdit" type="button" hidden>Annulla</button><button class="button" type="submit">Salva giornata</button></div>
+            </div>
+          </form>
+        </section>
+
+        <aside class="panel project-panel">
+          <div class="panel-title"><div><p class="eyebrow">Per commessa</p><h2>Tempo dedicato</h2></div></div>
+          <div id="projectSummary" class="project-summary"><p class="empty">Nessun dato per questo mese.</p></div>
+        </aside>
+      </section>
+
+      <section class="panel records-panel">
+        <div class="records-head"><div><p class="eyebrow">Registro mensile</p><h2>Giornate registrate</h2></div><button class="text-button" id="exportButton" type="button">Esporta CSV</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Data</th><th>Attività / Commessa</th><th>Orario</th><th>Pausa</th><th>Durata</th><th>Stato</th><th></th></tr></thead><tbody id="entriesTable"></tbody></table></div>
+        <div id="emptyState" class="empty-state"><div class="empty-icon">＋</div><h3>Inizia a segnare le ore</h3><p>Aggiungi la prima giornata per vedere qui il riepilogo.</p></div>
+      </section>
+    </main>
+    <dialog id="helpDialog"><button class="dialog-close" id="closeDialog" aria-label="Chiudi">×</button><h2>Come vengono calcolate le ore?</h2><p>Le ore lavorate sono la differenza tra inizio e fine, meno la pausa pranzo. Le ore oltre le 8:00 giornaliere sono conteggiate come straordinarie.</p></dialog>
+    <button class="help-button" id="helpButton" aria-label="Informazioni sui calcoli">?</button>
+    <script src="app.js"></script>
+  </body>
+</html>
+
