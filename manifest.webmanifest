@@ -1,0 +1,10 @@
+{
+  "name": "Le mie ore",
+  "short_name": "Le mie ore",
+  "description": "Registro personale delle ore lavorative.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#1d4ed8"
+}
+
